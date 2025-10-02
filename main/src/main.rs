@@ -75,3 +75,19 @@ fn blackjack(money: i32) -> i32{
     let new_money = changing_money(money, amount);
     new_money
 }
+
+//checking if you hit 21
+fn is_21(card_amount: i32) -> bool{
+    if card_amount == 21{
+        return true;
+    }
+    false
+}
+
+//checking if you went over 21
+fn over_21(card_amount: i32) -> bool{
+    if card_amount > 21{
+        return true;
+    }
+    false
+}
