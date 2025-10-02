@@ -1,22 +1,37 @@
 use std::io;
 
 fn main() {
-    let money :i32 = 10;
-    println!("Blackjack!!");
-    println!("money: {}", money);
-    println!("Please enter a value");
-    let mut choice :String = String::new(); //no matter what you need to read make the mut be a string
+    let money :i32 = 1000;
 
-    //calling the scanner?
-    io::stdin()
-        .read_line(&mut choice) //letting the choice section be used as a reader
-        .expect("Failed to read line"); //just in case the code cant read the input
+    //making the main menu
+    loop {
+        println!("Blackjack!!");
+        println!("money: {}", money);
 
-    let number: i32 = choice.trim().parse().expect("Please enter a number"); //you have to type this to call in a int
+        //making the player chose what to do
+        println!("1. Play the Game\n2. Exit");
+        let mut choice: String = String::new(); //no matter what you need to read make the mut be a string
 
-    let money :i32 = check_money(money, number);
+        //calling the scanner?
+        io::stdin()
+            .read_line(&mut choice) //letting the choice section be used as a reader
+            .expect("Failed to read line"); //just in case the code cant read the input
 
-    println!("Money: {}", money);
+        let choice: i32 = choice.trim().parse().expect("Please enter a number"); //you have to type this to call in a int
+
+        //checking what the player chosed
+        if choice == 1 {
+            println!("Playing the game");
+        } else if choice == 2 {
+            break;
+        } else {
+            println!("Please, enter a valid option");
+        }
+    }
+
+
+    //
+    // println!("Money: {}", money);
 }
 
 //checking how much money is gained or lost
