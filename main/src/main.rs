@@ -35,7 +35,7 @@ fn main() {
 }
 
 //checking how much money is gained or lost
-fn check_money(original_money: i32,changed_money: i32) -> i32{
+fn changing_money(original_money: i32,changed_money: i32) -> i32{
     if changed_money < 0{ //losing money
         let total_money = original_money + changed_money;
         total_money
