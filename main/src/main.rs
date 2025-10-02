@@ -1,13 +1,22 @@
+use std::io;
+
 fn main() {
-    let money = 10;
-    let money_lost = -5;
-    let money_won = 5;
+    let money :i32 = 10;
     println!("Blackjack!!");
     println!("money: {}", money);
-    let money = check_money(money, money_lost);
-    println!("money: {}", money);
-    let money = check_money(money, money_won);
-    println!("money: {}", money);
+    println!("Please enter a value");
+    let mut choice :String = String::new(); //no matter what you need to read make the mut be a string
+
+    //calling the scanner?
+    io::stdin()
+        .read_line(&mut choice) //letting the choice section be used as a reader
+        .expect("Failed to read line"); //just in case the code cant read the input
+
+    let number: i32 = choice.trim().parse().expect("Please enter a number"); //you have to type this to call in a int
+
+    let money :i32 = check_money(money, number);
+
+    println!("Money: {}", money);
 }
 
 //checking how much money is gained or lost
