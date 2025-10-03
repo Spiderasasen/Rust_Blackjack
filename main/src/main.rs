@@ -1,5 +1,6 @@
 use std::io;
-
+use rand::{rng, Rng};
+use std::collections::linked_list::LinkedList;
 fn main() {
     let mut money :i32 = 1000;
 
@@ -31,14 +32,12 @@ fn main() {
             money = blackjack(money);
         } else if choice == 2 {
             break;
+        }else if choice == 3{
+                testing_shit();
         } else {
             println!("Please, enter a valid option");
         }
     }
-
-
-    //
-    // println!("Money: {}", money);
 }
 
 //checking how much money is gained or lost
@@ -62,7 +61,11 @@ fn check_money(money: i32) -> bool{
     false
 }
 
+//TODO, make blackjack
 fn blackjack(money: i32) -> i32{
+    //making a empty linked list
+    let mut cards:LinkedList<String> = LinkedList::new();
+
     //asking the user how much they want to bet
     println!("How much do you want to bet lad?");
     let mut amount = String::new();
@@ -70,10 +73,71 @@ fn blackjack(money: i32) -> i32{
         .read_line(&mut amount)
         .expect("Please enter a number");
 
+    //making and printing the cards
+    for i in 0..2{
+        cards.push_back(pretty_number(random_number()));
+    }
+    //looping
+    loop{
+        //printing the cards and the options of the player
+        println!("{:?}", cards);
+        println!("What do you want to do?\n1.Hit\n2. Stand");
+
+        //asking what the user wants to do
+        let mut choice = String::new();
+        io::stdin()
+            .read_line(&mut choice)
+            .expect("Please enter a valid option");
+
+        let choice :i32 = choice.trim().parse().expect("Please enter a number");
+
+        if choice == 1{
+            println!("Hitting");
+            break;
+        }
+        else if choice == 2 {
+            println!("Bots turn");
+            break;
+        }
+        else{
+            println!("Please enter a valid option");
+        }
+    }
+
     let amount :i32 = amount.trim().parse().expect("Please enter a number");
 
     let new_money = changing_money(money, amount);
     new_money
+}
+
+//giving out a number out
+fn random_number() -> i32{
+    let mut rng = rand::thread_rng();
+
+    let number = rng.gen_range(1..10);
+
+    number
+}
+
+//pretty printing for the cards
+fn pretty_number(card_num: i32) -> String{
+    if card_num == 1{
+        "Ace".to_string()
+    }
+    else if card_num == 10 {
+        //making a array
+        let bob = ["10", "Jack", "Queen", "King"]; //this is how to make an array
+
+        //getting a random number to get the index
+        let mut rng = rand::thread_rng();
+        let index = rng.gen_range(0..3);
+
+        //returning the string
+        return bob[index].to_string(); //this is how to get the results
+    }
+    else{
+        return card_num.to_string();
+    }
 }
 
 //checking if you hit 21
@@ -90,4 +154,28 @@ fn over_21(card_amount: i32) -> bool{
         return true;
     }
     false
+}
+
+// testing my code works
+fn testing_shit(){
+    if is_21(22){
+        println!("Yes_21");
+    }
+    else{
+        println!("No_21");
+    }
+
+    if over_21(22){
+        println!("Yes_over");
+    }
+    else{
+        println!("No_over");
+    }
+
+    let num: i32 = random_number();
+    let num2: i32 = 10;
+    let card:String = pretty_number(num);
+    let card2: String = pretty_number(num2);
+    println!("{}", card);
+    println!("{}", card2);
 }
