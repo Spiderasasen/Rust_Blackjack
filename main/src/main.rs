@@ -74,7 +74,7 @@ fn blackjack(money: i32) -> i32{
         .expect("Please enter a number");
 
     //making and printing the cards
-    for i in 0..2{
+    for _ in 0..2{
         cards.push_back(pretty_number(random_number()));
     }
     //looping
@@ -157,7 +157,22 @@ fn over_21(card_amount: i32) -> bool{
 }
 
 //adding up the list to get the last value
+fn total_value_of_cards(list: LinkedList<String>, previous_total_value: i32) -> i32{
+    let mut num: i32 = previous_total_value;
 
+    //if the privious value was 0, we just add it noramlly
+    if num <= 0{
+        for item in list{
+            num += what_value(item, num);
+        }
+    }
+    else{
+        for item in list{
+            num += what_value(item, num);
+        }
+    }
+    num
+}
 
 //seeing what card you got
 fn what_value(card: String, total_vale: i32) -> i32{
@@ -165,7 +180,7 @@ fn what_value(card: String, total_vale: i32) -> i32{
         10
     }
     else if card == "Ace"{ //checking on the ace
-        return if over_21(total_vale) { //if over 21, return 1
+        return if over_21(total_vale + 11) { //if over 21, return 1
             1
         } else { //if not over 21 return 1
             11
@@ -199,4 +214,21 @@ fn testing_shit(){
     let card2: String = pretty_number(num2);
     println!("{}", card);
     println!("{}", card2);
+
+    //checking the amount if what_value works
+    println!("{}", what_value("Jack".to_string(), 10));
+    println!("{}", what_value("Ace".to_string(), 11));
+    println!("{}", what_value("Ace".to_string(), 10));
+    println!("{}", what_value("15".to_string(), 11));
+
+    //checking if total_value_of_cards works
+    let mut cards:LinkedList<String> = LinkedList::new();
+    cards.push_back("Jack".to_string());
+    cards.push_back("Ace".to_string());
+    let mut value = total_value_of_cards(cards, 0);
+    println!("{}", value);
+    // cards.push_back(4.to_string());
+    // let old_values = value;
+    // value = total_value_of_cards(cards, old_values);
+
 }
