@@ -156,6 +156,27 @@ fn over_21(card_amount: i32) -> bool{
     false
 }
 
+//adding up the list to get the last value
+
+
+//seeing what card you got
+fn what_value(card: String, total_vale: i32) -> i32{
+    if card == "Jack" || card == "Queen" || card == "King"{ //if jack, queen, or king, return 10
+        10
+    }
+    else if card == "Ace"{ //checking on the ace
+        return if over_21(total_vale) { //if over 21, return 1
+            1
+        } else { //if not over 21 return 1
+            11
+        }
+    }
+    else{
+        let safe_number: i32 = card.parse().expect("Please enter a number");
+        return safe_number;
+    }
+}
+
 // testing my code works
 fn testing_shit(){
     if is_21(22){
