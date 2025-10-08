@@ -72,15 +72,46 @@ fn blackjack(money: i32) -> i32{
     io::stdin()
         .read_line(&mut amount)
         .expect("Please enter a number");
+    //making the input into a valid int
+    let mut amount:i32 = amount.trim().parse().expect("Please enter a number");
 
     //making and printing the cards
     for _ in 0..2{
         cards.push_back(pretty_number(random_number()));
     }
+
+    let clone_cards = cards.clone();
+
+    //intal count
+    let mut total:i32 =  total_value_of_cards(clone_cards, 0);
+
+    //if 21, the user automatically wins
+    if is_21(total){
+        println!("YOU WIN!!!");
+        amount =  amount * 5;
+    }
+
     //looping
     loop{
         //printing the cards and the options of the player
         println!("{:?}", cards);
+        println!("Total Value: {}", total);
+
+        //checking if you got 21
+        if is_21(total){
+            println!("YOU WIN!!!");
+            amount = amount * 2;
+            break;
+        }
+
+        //checking if the player went over 21
+        if over_21(total){
+            println!("YOU LOST!!!");
+            amount = amount * -2;
+            break;
+        }
+
+        //asking what the player wants
         println!("What do you want to do?\n1.Hit\n2. Stand");
 
         //asking what the user wants to do
@@ -91,21 +122,24 @@ fn blackjack(money: i32) -> i32{
 
         let choice :i32 = choice.trim().parse().expect("Please enter a number");
 
-        if choice == 1{
+        if choice == 1{ //player hits
             println!("Hitting");
-            break;
+            cards.push_back(pretty_number(random_number()));
+            let cards_clone = cards.clone();
+            let old_total:i32 = total;
+            total = total_value_of_cards(cards_clone, old_total);
+            continue;
         }
-        else if choice == 2 {
+        else if choice == 2 { //player stands
             println!("Bots turn");
             break;
         }
-        else{
+        else{ //player put something else then 1 or 2
             println!("Please enter a valid option");
         }
     }
 
-    let amount :i32 = amount.trim().parse().expect("Please enter a number");
-
+    //changing the amount of the money
     let new_money = changing_money(money, amount);
     new_money
 }
@@ -225,7 +259,7 @@ fn testing_shit(){
     let mut cards:LinkedList<String> = LinkedList::new();
     cards.push_back("Jack".to_string());
     cards.push_back("Ace".to_string());
-    let mut value = total_value_of_cards(cards, 0);
+    let value = total_value_of_cards(cards, 0);
     println!("{}", value);
     // cards.push_back(4.to_string());
     // let old_values = value;
