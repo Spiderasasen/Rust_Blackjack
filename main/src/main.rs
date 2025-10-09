@@ -66,6 +66,9 @@ fn blackjack(money: i32) -> i32{
     //making a empty linked list
     let mut cards:LinkedList<String> = LinkedList::new();
 
+    //making the bot cards
+    let mut bot_cards:LinkedList<String> = LinkedList::new();
+
     //asking the user how much they want to bet
     println!("How much do you want to bet lad?");
     let mut amount = String::new();
@@ -79,6 +82,9 @@ fn blackjack(money: i32) -> i32{
     for _ in 0..2{
         cards.push_back(pretty_number(random_number()));
     }
+
+    //making the bots cards
+    bot_cards.push_back(pretty_number(random_number()));
 
     let clone_cards = cards.clone();
 
@@ -94,7 +100,8 @@ fn blackjack(money: i32) -> i32{
     //looping
     loop{
         //printing the cards and the options of the player
-        println!("{:?}", cards);
+        println!("Your Cards: {:?}", cards);
+        println!("Bot's Cards: {:?}", bot_cards);
         println!("Total Value: {}", total);
 
         //checking if you got 21
@@ -123,16 +130,79 @@ fn blackjack(money: i32) -> i32{
         let choice :i32 = choice.trim().parse().expect("Please enter a number");
 
         if choice == 1{ //player hits
-            println!("Hitting");
             cards.push_back(pretty_number(random_number()));
             let cards_clone = cards.clone();
-            let old_total:i32 = total;
-            total = total_value_of_cards(cards_clone, old_total);
+            total = total_value_of_cards(cards_clone, 0);
             continue;
         }
         else if choice == 2 { //player stands
-            println!("Bots turn");
-            break;
+            //establishing a boolean if it is 21 or over 21
+            let mut is_value_21:bool = false;
+            let mut is_value_over:bool = false;
+            let mut is_total_16:bool = false;
+
+            //establishing the bots total count after 1
+            let bot_cards_clone :LinkedList<String> = bot_cards.clone();
+            let mut total_bot_count:i32 = total_value_of_cards(bot_cards_clone, 0);
+
+            //will countine looping unless the value is greater than 16
+            loop{
+                //printing the values
+                println!("Bot Cards: {:?}", bot_cards);
+                println!("Total Bot Count: {}", total_bot_count);
+
+                //checking if the value is 16 or higher
+                if total_bot_count >= 16{
+                    is_total_16 = true;
+                    break;
+                }
+
+                //counting if the bot got a 21
+                if is_21(total_bot_count){
+                    println!("YOU LOST!!!");
+                    amount = amount * -2;
+                    is_value_21 = true;
+                    break;
+                }
+
+                //if the bot got over 21
+                if over_21(total_bot_count){
+                    println!("YOU WIN!!!");
+                    amount = amount * 2;
+                    is_value_over = true;
+                    break;
+                }
+
+                //adding another card to the bot and also counting the cards
+                bot_cards.push_back(pretty_number(random_number()));
+                let bot_cards_clone: LinkedList<String> = bot_cards.clone();
+                total_bot_count = total_value_of_cards(bot_cards_clone, 0);
+            }
+
+            //checking if either small values is true
+            if is_value_21{ //bot got 21
+                break;
+            }
+
+            if is_value_over{ //bot got over 21
+                break;
+            }
+
+            if is_total_16{ // bot got a total value of 16 or higher
+                //if the bot got a bigger value then the player, the bot wins
+                if total < total_bot_count{
+                    println!("YOU LOST!!!");
+                    amount = amount * -2;
+                    break;
+                }
+
+                //if the player got a bigger number then the bot, the player wins
+                if total > total_bot_count{
+                    println!("YOU WIN!!!");
+                    amount = amount * 2;
+                    break;
+                }
+            }
         }
         else{ //player put something else then 1 or 2
             println!("Please enter a valid option");
@@ -228,6 +298,7 @@ fn what_value(card: String, total_vale: i32) -> i32{
 
 // testing my code works
 fn testing_shit(){
+    println!("So you found this section of the code.\nWell this used to be a place for me to test shit.\n This is now a waste land, nothing is here.\n But hey you found a testing area, that im to lazy to remove so just enjoy the comment");
     if is_21(22){
         println!("Yes_21");
     }
